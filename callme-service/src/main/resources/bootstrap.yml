@@ -8,4 +8,4 @@ spring:
       discovery:
         instance-id: ${spring.application.name}:${random.int}
 #        hostname: localhost
-        register-health-check: false
+#        register-health-check: false

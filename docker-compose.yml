@@ -1,0 +1,101 @@
+version: '2.1'
+
+services:
+  consul:
+    image: consul
+    container_name: consul
+    expose:
+      - "8500"
+    ports:
+      - "8500:8500"
+    networks:
+      - ded-net
+
+  gateway-service:
+    container_name: poc_gw_service
+    build:
+      context: generic_java_docker/
+      dockerfile: Dockerfile
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./gateway-service/target/:/app/
+    networks:
+      - ded-net
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+
+  caller-service1:
+    container_name: poc_caller_1
+    build:
+      context: generic_java_docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./caller-service/target/:/app/
+    networks:
+      - ded-net
+    expose:
+      - "8091"
+    ports:
+      - "8091:8091"
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SERVER_PORT=8091
+
+  caller-service2:
+    container_name: poc_caller_2
+    build:
+      context: generic_java_docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./caller-service/target/:/app/
+    expose:
+      - "8092"
+    ports:
+      - "8092:8092"
+    networks:
+      - ded-net
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SERVER_PORT=8092
+
+  callme-service1:
+    container_name: poc_callme_1
+    build:
+      context: generic_java_docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./callme-service/target/:/app/
+    networks:
+      - ded-net
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SERVER_PORT=8093
+
+  callme-service2:
+    container_name: poc_callme_2
+    build:
+      context: generic_java_docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./callme-service/target/:/app/
+    networks:
+      - ded-net
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SERVER_PORT=8094
+
+  consul-config-uploader:
+    container_name: consul-config-uploader
+    build:
+      context: config/
+      dockerfile: Dockerfile
+    networks:
+      - ded-net
+
+networks:
+  ded-net:
+    external:
+      name: dedicated-network
