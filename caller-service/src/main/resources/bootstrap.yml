@@ -1,9 +1,12 @@
+server:
+  port: 0
 spring:
   application:
     name: caller-service
   cloud:
     consul:
-      host: 192.168.99.100
+      host: localhost
       discovery:
-        hostname: localhost
+#        hostname: localhost
         register-health-check: false
+        instance-id: ${spring.application.name}:${random.int}

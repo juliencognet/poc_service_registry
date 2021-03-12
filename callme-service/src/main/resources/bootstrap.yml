@@ -3,7 +3,9 @@ spring:
     name: callme-service
   cloud:
     consul:
-      host: 192.168.99.100
+      host: localhost
+      port: 8500
       discovery:
-        hostname: localhost
+        instance-id: ${spring.application.name}:${random.int}
+#        hostname: localhost
         register-health-check: false
