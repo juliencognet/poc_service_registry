@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "The application will start in 20s..." && sleep 20
+echo "The application will start in 10s..." && sleep 10
 for f in /app/*.jar
 do
     cp $f /tmp/app.jar

@@ -3,8 +3,8 @@ spring:
     name: caller-service
   cloud:
     consul:
-      host: localhost
+      host: consul
+      port: 8500
       discovery:
-#        hostname: localhost
-#        register-health-check: false
+        enabled: false
         instance-id: ${spring.application.name}:${random.int}

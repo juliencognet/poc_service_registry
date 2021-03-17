@@ -14,7 +14,7 @@ services:
   gateway-service:
     container_name: poc_gw_service
     build:
-      context: generic_java_docker/
+      context: generic-java-docker/
       dockerfile: Dockerfile
     expose:
       - "8080"
@@ -28,9 +28,9 @@ services:
       - SPRING_CLOUD_CONSUL_HOST=consul
 
   caller-service1:
-    container_name: poc_caller_1
+    container_name: caller1
     build:
-      context: generic_java_docker/
+      context: generic-java-docker/
       dockerfile: Dockerfile
     volumes:
       - ./caller-service/target/:/app/
@@ -42,12 +42,14 @@ services:
       - "8091:8091"
     environment:
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller1
       - SERVER_PORT=8091
 
   caller-service2:
-    container_name: poc_caller_2
+    container_name: caller2
     build:
-      context: generic_java_docker/
+      context: generic-java-docker/
       dockerfile: Dockerfile
     volumes:
       - ./caller-service/target/:/app/
@@ -59,12 +61,14 @@ services:
       - ded-net
     environment:
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2
       - SERVER_PORT=8092
 
   callme-service1:
-    container_name: poc_callme_1
+    container_name: callme1
     build:
-      context: generic_java_docker/
+      context: generic-java-docker/
       dockerfile: Dockerfile
     volumes:
       - ./callme-service/target/:/app/
@@ -72,12 +76,14 @@ services:
       - ded-net
     environment:
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme1
       - SERVER_PORT=8093
 
   callme-service2:
-    container_name: poc_callme_2
+    container_name: callme2
     build:
-      context: generic_java_docker/
+      context: generic-java-docker/
       dockerfile: Dockerfile
     volumes:
       - ./callme-service/target/:/app/
@@ -85,12 +91,14 @@ services:
       - ded-net
     environment:
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme2
       - SERVER_PORT=8094
 
   consul-config-uploader:
     container_name: consul-config-uploader
     build:
-      context: config/
+      context: gateway-config/
       dockerfile: Dockerfile
     networks:
       - ded-net

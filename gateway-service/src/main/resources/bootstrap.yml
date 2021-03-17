@@ -3,13 +3,16 @@ spring:
     name: gateway-service
   cloud:
     consul:
-      host: localhost
+      host: consul
       config:
         format: YAML
       discovery:
+       # hostname: localhost
         register-health-check: false
 
     loadbalancer:
+      cache:
+        ttl: PT5S
       ribbon:
         enabled: false
 
