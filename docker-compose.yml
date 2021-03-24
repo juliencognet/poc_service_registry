@@ -1,8 +1,8 @@
 version: '2.1'
 
 services:
-  eureka:
-    container_name: eureka
+  eureka1:
+    container_name: eureka1
     build:
       context: generic-java-docker/
       dockerfile: Dockerfile
@@ -14,9 +14,32 @@ services:
       - ./service-registry/target/:/app/
     networks:
       - ded-net
+    environment:
+      - WAIT_TIME=0
+      - SPRING_PROFILES_ACTIVE=eureka1
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka1:8761/eureka,http://eureka2:8762/eureka
+
+  eureka2:
+    container_name: eureka2
+    build:
+      context: generic-java-docker/
+      dockerfile: Dockerfile
+    expose:
+      - "8762"
+    ports:
+      - "8762:8762"
+    volumes:
+      - ./service-registry/target/:/app/
+    networks:
+      - ded-net
+    environment:
+      - WAIT_TIME=10
+      - SPRING_PROFILES_ACTIVE=eureka2
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka1:8761/eureka,http://eureka2:8762/eureka
+
 
   gateway-service:
-    container_name: poc_gw_service
+    container_name: gateway
     build:
       context: generic-java-docker/
       dockerfile: Dockerfile
@@ -29,83 +52,78 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
-#
-#  caller-service1:
-#    container_name: caller1
-#    build:
-#      context: generic-java-docker/
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./caller-service/target/:/app/
-#    networks:
-#      - ded-net
-#    expose:
-#      - "8091"
-#    ports:
-#      - "8091:8091"
-#    environment:
-#      - SPRING_CLOUD_CONSUL_HOST=consul
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller1
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller1
-#      - SERVER_PORT=8091
-#
-#  caller-service2:
-#    container_name: caller2
-#    build:
-#      context: generic-java-docker/
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./caller-service/target/:/app/
-#    expose:
-#      - "8092"
-#    ports:
-#      - "8092:8092"
-#    networks:
-#      - ded-net
-#    environment:
-#      - SPRING_CLOUD_CONSUL_HOST=consul
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller2
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2
-#      - SERVER_PORT=8092
-#
-#  callme-service1:
-#    container_name: callme1
-#    build:
-#      context: generic-java-docker/
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./callme-service/target/:/app/
-#    networks:
-#      - ded-net
-#    environment:
-#      - SPRING_CLOUD_CONSUL_HOST=consul
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme1
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme1
-#      - SERVER_PORT=8093
-#
-#  callme-service2:
-#    container_name: callme2
-#    build:
-#      context: generic-java-docker/
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./callme-service/target/:/app/
-#    networks:
-#      - ded-net
-#    environment:
-#      - SPRING_CLOUD_CONSUL_HOST=consul
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme2
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme2
-#      - SERVER_PORT=8094
-#
-#  consul-config-uploader:
-#    container_name: consul-config-uploader
-#    build:
-#      context: gateway-config/
-#      dockerfile: Dockerfile
-#    networks:
-#      - ded-net
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka1:8761/eureka,http://eureka2:8762/eureka
+      - WAIT_TIME=20
+      - EUREKA_INSTANCE_INSTANCEID=gateway
+      - SERVER_PORT=8080
+
+  caller-service1:
+    container_name: caller1
+    build:
+      context: generic-java-docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./caller-service/target/:/app/
+    networks:
+      - ded-net
+    expose:
+      - "8091"
+    ports:
+      - "8091:8091"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka1:8761/eureka,http://eureka2:8762/eureka
+      - WAIT_TIME=20
+      - EUREKA_INSTANCE_INSTANCEID=caller1
+      - SERVER_PORT=8091
+
+  caller-service2:
+    container_name: caller2
+    build:
+      context: generic-java-docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./caller-service/target/:/app/
+    expose:
+      - "8092"
+    ports:
+      - "8092:8092"
+    networks:
+      - ded-net
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka1:8761/eureka,http://eureka2:8762/eureka
+      - WAIT_TIME=20
+      - EUREKA_INSTANCE_INSTANCEID=caller2
+      - SERVER_PORT=8092
+
+  callme-service1:
+    container_name: callme1
+    build:
+      context: generic-java-docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./callme-service/target/:/app/
+    networks:
+      - ded-net
+    environment:
+      - SERVER_PORT=0
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka1:8761/eureka,http://eureka2:8762/eureka
+      - WAIT_TIME=20
+      - EUREKA_INSTANCE_INSTANCEID=callme1
+
+  callme-service2:
+    container_name: callme2
+    build:
+      context: generic-java-docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./callme-service/target/:/app/
+    networks:
+      - ded-net
+    environment:
+      - SERVER_PORT=0
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka1:8761/eureka,http://eureka2:8762/eureka
+      - WAIT_TIME=20
+      - EUREKA_INSTANCE_INSTANCEID=callme2
 
 networks:
   ded-net:

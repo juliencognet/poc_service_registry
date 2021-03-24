@@ -1,8 +1,29 @@
 spring:
   application:
-    name: gateway-service
-eureka.client:
-  register-with-eureka: false
-  fetch-registry: false
-
+    name: service-registry
+eureka:
+  server:
+    eviction-interval-timer-in-ms: 5000
+    enable-self-preservation: false
+    responseCacheUpdateInvervalMs: 1000
+---
+spring:
+  profiles: eureka1
+eureka:
+  instance:
+    hostname: eureka1
+  client:
+    serviceUrl:
+      defaultZone: http://peer2:8762/eureka/
 server.port: 8761
+
+---
+spring:
+  profiles: eureka2
+eureka:
+  instance:
+    hostname: eureka2
+  client:
+    serviceUrl:
+      defaultZone: http://peer1:8761/eureka/
+server.port: 8762

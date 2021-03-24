@@ -2,9 +2,18 @@ spring:
   application:
     name: caller-service
   cloud:
-    consul:
-      host: consul
-      port: 8500
-      discovery:
-        enabled: false
-        instance-id: ${spring.application.name}:${random.int}
+    loadbalancer:
+      cache:
+        ttl: PT5S
+
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds : 10
+    lease-renewal-interval-in-seconds : 1
+
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    healthcheck:
+      enabled: true
+
