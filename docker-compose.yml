@@ -12,7 +12,7 @@ services:
       - ded-net
 
   gateway-service:
-    container_name: poc_gw_service
+    container_name: gateway
     build:
       context: generic-java-docker/
       dockerfile: Dockerfile

@@ -6,5 +6,8 @@ spring:
       host: consul
       port: 8500
       discovery:
-        enabled: false
+        enabled: true
         instance-id: ${spring.application.name}:${random.int}
+        healthCheckInterval: 5s
+        healthCheckTimeout: 10s
+        healthCheckCriticalTimeout: 15s

@@ -7,12 +7,18 @@ spring:
       config:
         format: YAML
       discovery:
-       # hostname: localhost
         register-health-check: false
+        enabled: true
+        healthCheckInterval: 5s
+        healthCheckTimeout: 10s
+        healthCheckCriticalTimeout: 15s
 
     loadbalancer:
+      service-discovery:
+        timeout: PT5S
       cache:
-        ttl: PT5S
+        enabled: false
+#        ttl: PT5S
       ribbon:
         enabled: false
 
