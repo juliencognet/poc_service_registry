@@ -2,13 +2,7 @@ spring:
   application:
     name: gateway-service
   cloud:
-    consul:
-      host: consul
-      config:
-        format: YAML
-      discovery:
-       # hostname: localhost
-        register-health-check: false
+
 
     loadbalancer:
       cache:

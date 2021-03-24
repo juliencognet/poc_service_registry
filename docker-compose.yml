@@ -1,13 +1,17 @@
 version: '2.1'
 
 services:
-  consul:
-    image: consul
-    container_name: consul
+  eureka:
+    container_name: eureka
+    build:
+      context: generic-java-docker/
+      dockerfile: Dockerfile
     expose:
-      - "8500"
+      - "8761"
     ports:
-      - "8500:8500"
+      - "8761:8761"
+    volumes:
+      - ./service-registry/target/:/app/
     networks:
       - ded-net
 
@@ -26,82 +30,82 @@ services:
       - ded-net
     environment:
       - SPRING_CLOUD_CONSUL_HOST=consul
-
-  caller-service1:
-    container_name: caller1
-    build:
-      context: generic-java-docker/
-      dockerfile: Dockerfile
-    volumes:
-      - ./caller-service/target/:/app/
-    networks:
-      - ded-net
-    expose:
-      - "8091"
-    ports:
-      - "8091:8091"
-    environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller1
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller1
-      - SERVER_PORT=8091
-
-  caller-service2:
-    container_name: caller2
-    build:
-      context: generic-java-docker/
-      dockerfile: Dockerfile
-    volumes:
-      - ./caller-service/target/:/app/
-    expose:
-      - "8092"
-    ports:
-      - "8092:8092"
-    networks:
-      - ded-net
-    environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2
-      - SERVER_PORT=8092
-
-  callme-service1:
-    container_name: callme1
-    build:
-      context: generic-java-docker/
-      dockerfile: Dockerfile
-    volumes:
-      - ./callme-service/target/:/app/
-    networks:
-      - ded-net
-    environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme1
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme1
-      - SERVER_PORT=8093
-
-  callme-service2:
-    container_name: callme2
-    build:
-      context: generic-java-docker/
-      dockerfile: Dockerfile
-    volumes:
-      - ./callme-service/target/:/app/
-    networks:
-      - ded-net
-    environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme2
-      - SERVER_PORT=8094
-
-  consul-config-uploader:
-    container_name: consul-config-uploader
-    build:
-      context: gateway-config/
-      dockerfile: Dockerfile
-    networks:
-      - ded-net
+#
+#  caller-service1:
+#    container_name: caller1
+#    build:
+#      context: generic-java-docker/
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./caller-service/target/:/app/
+#    networks:
+#      - ded-net
+#    expose:
+#      - "8091"
+#    ports:
+#      - "8091:8091"
+#    environment:
+#      - SPRING_CLOUD_CONSUL_HOST=consul
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller1
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller1
+#      - SERVER_PORT=8091
+#
+#  caller-service2:
+#    container_name: caller2
+#    build:
+#      context: generic-java-docker/
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./caller-service/target/:/app/
+#    expose:
+#      - "8092"
+#    ports:
+#      - "8092:8092"
+#    networks:
+#      - ded-net
+#    environment:
+#      - SPRING_CLOUD_CONSUL_HOST=consul
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller2
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2
+#      - SERVER_PORT=8092
+#
+#  callme-service1:
+#    container_name: callme1
+#    build:
+#      context: generic-java-docker/
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./callme-service/target/:/app/
+#    networks:
+#      - ded-net
+#    environment:
+#      - SPRING_CLOUD_CONSUL_HOST=consul
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme1
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme1
+#      - SERVER_PORT=8093
+#
+#  callme-service2:
+#    container_name: callme2
+#    build:
+#      context: generic-java-docker/
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./callme-service/target/:/app/
+#    networks:
+#      - ded-net
+#    environment:
+#      - SPRING_CLOUD_CONSUL_HOST=consul
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme2
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme2
+#      - SERVER_PORT=8094
+#
+#  consul-config-uploader:
+#    container_name: consul-config-uploader
+#    build:
+#      context: gateway-config/
+#      dockerfile: Dockerfile
+#    networks:
+#      - ded-net
 
 networks:
   ded-net:
