@@ -4,8 +4,8 @@ spring:
   cloud:
     consul:
       host: consul
-      config:
-        format: YAML
+  #    config:
+  #      format: YAML
       discovery:
         register-health-check: false
         enabled: true
@@ -21,5 +21,23 @@ spring:
 #        ttl: PT5S
       ribbon:
         enabled: false
+
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: caller-service
+          uri: lb://caller-service
+          predicates:
+            - Path=/caller/**
+          filters:
+            - RewritePath=/caller/(?<path>.*), /$\{path}
+        - id: callme-service
+          uri: lb://callme-service
+          predicates:
+            - Path=/callme/**
+          filters:
+            - RewritePath=/callme/(?<path>.*), /$\{path}
 
 server.port: 8080

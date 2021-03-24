@@ -1,6 +1,8 @@
 spring:
   application:
     name: callme-service
+  config:
+    import: consul
   cloud:
     consul:
       host: consul

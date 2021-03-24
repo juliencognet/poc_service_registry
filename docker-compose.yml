@@ -26,6 +26,9 @@ services:
       - ded-net
     environment:
       - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=gateway
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=gateway
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=gateway-service
 
   caller-service1:
     container_name: caller1
@@ -44,6 +47,7 @@ services:
       - SPRING_CLOUD_CONSUL_HOST=consul
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller1
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service
       - SERVER_PORT=8091
 
   caller-service2:
@@ -63,6 +67,7 @@ services:
       - SPRING_CLOUD_CONSUL_HOST=consul
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller2
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service
       - SERVER_PORT=8092
 
   callme-service1:
@@ -78,6 +83,7 @@ services:
       - SPRING_CLOUD_CONSUL_HOST=consul
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme1
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=callme-service
       - SERVER_PORT=8093
 
   callme-service2:
@@ -93,6 +99,7 @@ services:
       - SPRING_CLOUD_CONSUL_HOST=consul
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme2
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=callme-service
       - SERVER_PORT=8094
 
   consul-config-uploader:
