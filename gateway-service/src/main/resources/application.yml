@@ -3,15 +3,7 @@ spring:
     name: gateway-service
   cloud:
     consul:
-      host: consul
-  #    config:
-  #      format: YAML
-      discovery:
-        register-health-check: false
-        enabled: true
-        healthCheckInterval: 5s
-        healthCheckTimeout: 10s
-        healthCheckCriticalTimeout: 15s
+      host: consul-agent-1
 
     loadbalancer:
       service-discovery:

@@ -1,15 +1,52 @@
-version: '2.1'
+version: '3'
 
 services:
-  consul:
-    image: consul
-    container_name: consul
-    expose:
-      - "8500"
-    ports:
-      - "8500:8500"
+
+  consul-agent-1: &consul-agent
+    image: consul:latest
     networks:
       - ded-net
+    command: "agent -retry-join consul-server-bootstrap -client 0.0.0.0"
+    container_name: consul-agent-1
+
+  consul-agent-2:
+    <<: *consul-agent
+    container_name: consul-agent-2
+
+  consul-agent-3:
+    <<: *consul-agent
+    container_name: consul-agent-3
+
+  consul-server-1: &consul-server
+    <<: *consul-agent
+    command: "agent -server -retry-join consul-server-bootstrap -client 0.0.0.0"
+    container_name: consul-server-1
+
+  consul-server-2:
+    <<: *consul-server
+    container_name: consul-server-2
+
+  consul-server-bootstrap:
+    container_name: consul-server-bootstrap
+    <<: *consul-agent
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:8600"
+      - "8600:8600/udp"
+    command: "agent -server -bootstrap-expect 3 -ui -client 0.0.0.0"
+
+
+# consul:
+#   image: consul
+#   container_name: consul-server
+#   expose:
+#     - "8500"
+#   ports:
+#     - "8500:8500"
+#   networks:
+#     - ded-net
+
 
   gateway-service:
     container_name: gateway
@@ -25,7 +62,7 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_HOST=consul-agent-1
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=gateway
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=gateway
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=gateway-service
@@ -44,7 +81,7 @@ services:
     ports:
       - "8091:8091"
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_HOST=consul-agent-2
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller1
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller1
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service
@@ -64,7 +101,7 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_HOST=consul-agent-3
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller2
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service
@@ -80,7 +117,7 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_HOST=consul-agent-1
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme1
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme1
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=callme-service
@@ -96,7 +133,7 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_HOST=consul-agent-2
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme2
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme2
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=callme-service

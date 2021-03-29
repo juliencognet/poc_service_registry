@@ -8,3 +8,7 @@ spring:
       discovery:
         enabled: true
         instance-id: ${spring.application.name}:${random.int}
+
+    loadbalancer:
+      cache:
+        enabled: false
