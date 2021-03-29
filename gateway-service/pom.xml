@@ -13,7 +13,6 @@
 	<artifactId>gateway-service</artifactId>
 
 	<properties>
-		<java.version>1.11</java.version>
 		<spring-cloud.version>Hoxton.SR1</spring-cloud.version>
 	</properties>
 
