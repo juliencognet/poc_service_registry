@@ -2,51 +2,37 @@ version: '3'
 
 services:
 
-  consul-agent-1: &consul-agent
+
+  consul-server-1:
+    # Uses only image and networks from 'consul-agent-1'
+    # while 'command' is overwritten
     image: consul:latest
+    container_name: consul-server-1
     networks:
       - ded-net
-    command: "agent -retry-join consul-server-bootstrap -client 0.0.0.0"
-    container_name: consul-agent-1
-
-  consul-agent-2:
-    <<: *consul-agent
-    container_name: consul-agent-2
-
-  consul-agent-3:
-    <<: *consul-agent
-    container_name: consul-agent-3
-
-  consul-server-1: &consul-server
-    <<: *consul-agent
     command: "agent -server -retry-join consul-server-bootstrap -client 0.0.0.0"
-    container_name: consul-server-1
 
   consul-server-2:
-    <<: *consul-server
+    # Complete copy of 'consul-server-1'
+    image: consul:latest
     container_name: consul-server-2
+    networks:
+      - ded-net
+    command: "agent -server -retry-join consul-server-bootstrap -client 0.0.0.0"
 
   consul-server-bootstrap:
-    container_name: consul-server-bootstrap
-    <<: *consul-agent
+    # Uses only image and networks from 'consul-agent-1'
+    # while 'command' is overwritten and 'ports' are defined
+    image: consul:latest
+    container_name: consul-server-3
+    networks:
+      - ded-net
     ports:
       - "8400:8400"
       - "8500:8500"
       - "8600:8600"
       - "8600:8600/udp"
-    command: "agent -server -bootstrap-expect 3 -ui -client 0.0.0.0"
-
-
-# consul:
-#   image: consul
-#   container_name: consul-server
-#   expose:
-#     - "8500"
-#   ports:
-#     - "8500:8500"
-#   networks:
-#     - ded-net
-
+    command: "agent -server -bootstrap-expect 1 -ui -client 0.0.0.0"
 
   gateway-service:
     container_name: gateway
@@ -62,18 +48,18 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul-agent-1
+      - SPRING_CLOUD_CONSUL_HOST=consul-server-bootstrap
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=gateway
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=gateway
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=gateway-service
 
-  caller-service1:
-    container_name: caller1
+  caller-service-2-4-1:
+    container_name: caller-2-4-1
     build:
       context: generic-java-docker/
       dockerfile: Dockerfile
     volumes:
-      - ./caller-service/target/:/app/
+      - ./caller-service-2-4/target/:/app/
     networks:
       - ded-net
     expose:
@@ -81,19 +67,19 @@ services:
     ports:
       - "8091:8091"
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul-agent-2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller1
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller1
-      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service
+      - SPRING_CLOUD_CONSUL_HOST=localhost
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-4-1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2-4-1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-4
       - SERVER_PORT=8091
 
-  caller-service2:
-    container_name: caller2
+  caller-service-2-4-2:
+    container_name: caller-2-4-2
     build:
       context: generic-java-docker/
       dockerfile: Dockerfile
     volumes:
-      - ./caller-service/target/:/app/
+      - ./caller-service-2-4/target/:/app/
     expose:
       - "8092"
     ports:
@@ -101,11 +87,93 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul-agent-3
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service
+      - SPRING_CLOUD_CONSUL_HOST=localhost
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-4-2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-2-4-2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-4
       - SERVER_PORT=8092
+
+  caller-service-2-3-1:
+    container_name: caller-2-3-1
+    build:
+      context: generic-java-docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./caller-service-2-3/target/:/app/
+    networks:
+      - ded-net
+    expose:
+      - "8093"
+    ports:
+      - "8093:8093"
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=localhost
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-3-1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-2-3-1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-3
+      - SERVER_PORT=8093
+
+  caller-service-2-3-2:
+    container_name: caller-2-3-2
+    build:
+      context: generic-java-docker/
+      dockerfile: Dockerfile
+    volumes:
+      - ./caller-service-2-3/target/:/app/
+    expose:
+      - "8094"
+    ports:
+      - "8094:8094"
+    networks:
+      - ded-net
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=localhost
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-3-2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-2-3-2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-3
+      - SERVER_PORT=8094
+
+
+#  caller-service-2-2-1:
+#    container_name: caller-2-2-1
+#    build:
+#      context: generic-java-docker/
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./caller-service-2-2/target/:/app/
+#    networks:
+#      - ded-net
+#    expose:
+#      - "8095"
+#    ports:
+#      - "8095:8095"
+#    environment:
+#      - SPRING_CLOUD_CONSUL_HOST=localhost
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-2-1
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2-2-1
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-2
+#      - SERVER_PORT=8095
+
+#  caller-service-2-2-2:
+#    container_name: caller-2-2-2
+#    build:
+#      context: generic-java-docker/
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./caller-service-2-2/target/:/app/
+#    expose:
+#      - "8096"
+#    ports:
+#      - "8096:8096"
+#    networks:
+#      - ded-net
+#    environment:
+#      - SPRING_CLOUD_CONSUL_HOST=localhost
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-2-2
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-2-2-2
+#      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-2
+#      - SERVER_PORT=8094
+
 
   callme-service1:
     container_name: callme1
@@ -117,11 +185,11 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul-agent-1
+      - SPRING_CLOUD_CONSUL_HOST=localhost
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme1
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme1
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=callme-service
-      - SERVER_PORT=8093
+      - SERVER_PORT=0
 
   callme-service2:
     container_name: callme2
@@ -133,11 +201,11 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul-agent-2
+      - SPRING_CLOUD_CONSUL_HOST=localhost
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme2
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme2
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=callme-service
-      - SERVER_PORT=8094
+      - SERVER_PORT=0
 
   consul-config-uploader:
     container_name: consul-config-uploader

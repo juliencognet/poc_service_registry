@@ -11,7 +11,9 @@
 
     <modules>
         <module>gateway-service</module>
-        <module>caller-service</module>
+        <module>caller-service-2-2</module>
+        <module>caller-service-2-3</module>
+        <module>caller-service-2-4</module>
         <module>callme-service</module>
     </modules>
 
