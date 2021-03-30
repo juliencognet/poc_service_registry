@@ -3,6 +3,8 @@ spring:
     name: caller-service
   cloud:
     loadbalancer:
+      ribbon:
+        enabled: false
       cache:
         ttl: PT5S
 
