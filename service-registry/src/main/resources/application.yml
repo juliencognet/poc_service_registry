@@ -4,7 +4,8 @@ spring:
 eureka:
   server:
     eviction-interval-timer-in-ms: 5000
-    enable-self-preservation: false
+    renewal-percent-threshold: 0.90
+    #enable-self-preservation: false
     responseCacheUpdateInvervalMs: 1000
 ---
 spring:
