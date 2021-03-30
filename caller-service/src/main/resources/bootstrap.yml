@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: caller-service
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        query-passing: true
+        catalog-services-watch-delay: 100
+
+    loadbalancer:
+      service-discovery:
+        timeout: PT5S
+      #cache:
+      #  enabled: false
+      ribbon:
+        enabled: false

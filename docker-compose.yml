@@ -48,18 +48,18 @@ services:
     networks:
       - ded-net
     environment:
-      - SPRING_CLOUD_CONSUL_HOST=consul-server-bootstrap
+      - SPRING_CLOUD_CONSUL_HOST=localhost
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=gateway
       - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=gateway
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=gateway-service
 
-  caller-service-2-4-1:
-    container_name: caller-2-4-1
+  caller-service-1:
+    container_name: caller-1
     build:
       context: generic-java-docker/
       dockerfile: Dockerfile
     volumes:
-      - ./caller-service-2-4/target/:/app/
+      - ./caller-service/target/:/app/
     networks:
       - ded-net
     expose:
@@ -68,18 +68,18 @@ services:
       - "8091:8091"
     environment:
       - SPRING_CLOUD_CONSUL_HOST=localhost
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-4-1
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2-4-1
-      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-4
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service
       - SERVER_PORT=8091
 
-  caller-service-2-4-2:
-    container_name: caller-2-4-2
+  caller-service-2:
+    container_name: caller-2
     build:
       context: generic-java-docker/
       dockerfile: Dockerfile
     volumes:
-      - ./caller-service-2-4/target/:/app/
+      - ./caller-service/target/:/app/
     expose:
       - "8092"
     ports:
@@ -88,95 +88,13 @@ services:
       - ded-net
     environment:
       - SPRING_CLOUD_CONSUL_HOST=localhost
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-4-2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-2-4-2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-4
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service
       - SERVER_PORT=8092
 
-  caller-service-2-3-1:
-    container_name: caller-2-3-1
-    build:
-      context: generic-java-docker/
-      dockerfile: Dockerfile
-    volumes:
-      - ./caller-service-2-3/target/:/app/
-    networks:
-      - ded-net
-    expose:
-      - "8093"
-    ports:
-      - "8093:8093"
-    environment:
-      - SPRING_CLOUD_CONSUL_HOST=localhost
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-3-1
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-2-3-1
-      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-3
-      - SERVER_PORT=8093
-
-  caller-service-2-3-2:
-    container_name: caller-2-3-2
-    build:
-      context: generic-java-docker/
-      dockerfile: Dockerfile
-    volumes:
-      - ./caller-service-2-3/target/:/app/
-    expose:
-      - "8094"
-    ports:
-      - "8094:8094"
-    networks:
-      - ded-net
-    environment:
-      - SPRING_CLOUD_CONSUL_HOST=localhost
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-3-2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-2-3-2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-3
-      - SERVER_PORT=8094
-
-
-#  caller-service-2-2-1:
-#    container_name: caller-2-2-1
-#    build:
-#      context: generic-java-docker/
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./caller-service-2-2/target/:/app/
-#    networks:
-#      - ded-net
-#    expose:
-#      - "8095"
-#    ports:
-#      - "8095:8095"
-#    environment:
-#      - SPRING_CLOUD_CONSUL_HOST=localhost
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-2-1
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller2-2-1
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-2
-#      - SERVER_PORT=8095
-
-#  caller-service-2-2-2:
-#    container_name: caller-2-2-2
-#    build:
-#      context: generic-java-docker/
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./caller-service-2-2/target/:/app/
-#    expose:
-#      - "8096"
-#    ports:
-#      - "8096:8096"
-#    networks:
-#      - ded-net
-#    environment:
-#      - SPRING_CLOUD_CONSUL_HOST=localhost
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=caller-2-2-2
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=caller-2-2-2
-#      - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=caller-service-2-2
-#      - SERVER_PORT=8094
-
-
-  callme-service1:
-    container_name: callme1
+  callme-service-1:
+    container_name: callme-1
     build:
       context: generic-java-docker/
       dockerfile: Dockerfile
@@ -186,13 +104,13 @@ services:
       - ded-net
     environment:
       - SPRING_CLOUD_CONSUL_HOST=localhost
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme1
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme-1
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme-1
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=callme-service
       - SERVER_PORT=0
 
   callme-service2:
-    container_name: callme2
+    container_name: callme-2
     build:
       context: generic-java-docker/
       dockerfile: Dockerfile
@@ -202,8 +120,8 @@ services:
       - ded-net
     environment:
       - SPRING_CLOUD_CONSUL_HOST=localhost
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme2
-      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=callme-2
+      - SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE_ID=callme-2
       - SPRING_CLOUD_CONSUL_DISCOVERY_SERVICENAME=callme-service
       - SERVER_PORT=0
 

@@ -4,16 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.piomin.services</groupId>
-    <artifactId>sample-spring-cloud-microservices-future</artifactId>
+    <groupId>poc.serviceregistry.services</groupId>
+    <artifactId>sample-spring-cloud-consul</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>gateway-service</module>
-        <module>caller-service-2-2</module>
-        <module>caller-service-2-3</module>
-        <module>caller-service-2-4</module>
+        <module>caller-service</module>
         <module>callme-service</module>
     </modules>
 

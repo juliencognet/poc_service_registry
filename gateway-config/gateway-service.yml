@@ -5,27 +5,12 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: caller-service-2-2
-          uri: lb://caller-service-2-2
+        - id: caller-service
+          uri: lb://caller-service
           predicates:
-            - Path=/caller22/**
-          filters:
-            - RewritePath=/caller22/(?<path>.*), /$\{path}
-
-        - id: caller-service-2-3
-          uri: lb://caller-service-2-3
-          predicates:
-            - Path=/caller23/**
-          filters:
-            - RewritePath=/caller23/(?<path>.*), /$\{path}
-
-        - id: caller-service-2-4
-          uri: lb://caller-service-2-4
-          predicates:
-            - Path=/caller24/**
+            - Path=/caller/**
           filters:
             - RewritePath=/caller24/(?<path>.*), /$\{path}
-
         - id: callme-service
           uri: lb://callme-service
           predicates:

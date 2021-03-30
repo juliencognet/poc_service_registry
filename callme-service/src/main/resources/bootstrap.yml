@@ -5,11 +5,10 @@ spring:
     import: consul
   cloud:
     consul:
-      host: consul
+      host: localhost
       port: 8500
       discovery:
         enabled: true
-        instance-id: ${spring.application.name}:${random.int}
         healthCheckInterval: 5s
         healthCheckTimeout: 10s
         healthCheckCriticalTimeout: 15s
