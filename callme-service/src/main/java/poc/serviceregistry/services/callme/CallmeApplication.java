@@ -1,4 +1,4 @@
-package pl.piomin.services.callme;
+package poc.serviceregistry.services.callme;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

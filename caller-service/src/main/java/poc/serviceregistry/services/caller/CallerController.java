@@ -1,4 +1,4 @@
-package pl.piomin.services.caller;
+package poc.serviceregistry.services.caller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

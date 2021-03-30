@@ -1,4 +1,4 @@
-package pl.piomin.services.callme;
+package poc.serviceregistry.services.callme;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

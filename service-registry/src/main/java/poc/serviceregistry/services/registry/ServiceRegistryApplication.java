@@ -1,4 +1,4 @@
-package pl.piomin.services.registry;
+package poc.serviceregistry.services.registry;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
