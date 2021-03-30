@@ -1,5 +1,11 @@
-## The Future of Spring Cloud Microservices After Netflix Era  [![Twitter](https://img.shields.io/twitter/follow/piotr_minkowski.svg?style=social&logo=twitter&label=Follow%20Me)](https://twitter.com/piotr_minkowski)
+## Implémentation de service discovery avec Spring Cloud Load Balancer, Spring Cloud Gateway et Eureka ##
 
-Detailed description can be found here: [The Future of Spring Cloud Microservices After Netflix Era](https://piotrminkowski.com/2019/04/05/the-future-of-spring-cloud-microservices-after-netflix-era/) 
+Ce projet propose un environnement complet sous docker permettant de tester la mise en oeuvre d'un système de service discovery basé sur les composants suivants:
+- Spring Cloud Gateway
+- Spring Cloud Load Balancer
+- Spring Cloud Eureka
+- Eureka déployé sur 2 noeuds 
+
+Projet largement inspiré de l'article [The Future of Spring Cloud Microservices After Netflix Era](https://piotrminkowski.com/2019/04/05/the-future-of-spring-cloud-microservices-after-netflix-era/) 
 
 
