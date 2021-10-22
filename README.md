@@ -1,4 +1,4 @@
-# poc_service_registry
+# Service Discovery and registry with open source Service Registry (Consul/Eureka) and Spring Cloud 
 
 This repository contains 2 branches:
 - implem/eureka
